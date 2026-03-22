@@ -135,7 +135,7 @@
       q4_hint: 'Можно выбрать несколько',
       q4_o1: 'Риск крупных штрафов',
       q4_o2: 'Документы и договоры',
-      q4_o3: 'Кадровые выпросы',
+      q4_o3: 'Кадровые вопросы',
       q4_o4: 'Трудовые споры',
       q5_h: 'Отлично!<br>Оставьте контакт ниже:',
       q5_hint: 'Юрист свяжется с вами в течение 30 минут',
@@ -297,9 +297,9 @@
       q_city_aria: 'Қаланы таңдаңыз',
       q_city_pl: 'Қаланы таңдаңыз',
       q_consent_pd_html:
-        '<a href="personal-data.html" target="_blank" rel="noopener noreferrer" class="q-doc-link">Жеке деректерді өңдеуге</a> келісемін',
+        '<a href="personal-data-kk.html" target="_blank" rel="noopener noreferrer" class="q-doc-link">Жеке деректерді өңдеуге</a> келісемін',
       q_consent_pr_html:
-        '<a href="privacy.html" target="_blank" rel="noopener noreferrer" class="q-doc-link">Құпиялылық саясатымен</a> таныстым',
+        '<a href="privacy-kk.html" target="_blank" rel="noopener noreferrer" class="q-doc-link">Құпиялылық саясатымен</a> таныстым',
       q_back: 'Артқа',
       q_next: 'Келесі',
       q_submit: 'Тәуекелді анықтау',

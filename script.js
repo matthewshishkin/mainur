@@ -782,6 +782,122 @@ const TOTAL_STEPS = 4;
 const answers = {};
 let lastProgressPercent = 0;
 
+/** Черновик квиза (шаги 1–5, форма) — для возврата с legal-страниц в новой вкладке */
+const QUIZ_DRAFT_KEY = 'mainur_quiz_draft_v1';
+const QUIZ_DRAFT_MAX_AGE_MS = 1000 * 60 * 60 * 24; // 24 ч
+
+function quizCloneAnswers() {
+  try {
+    return typeof structuredClone === 'function'
+      ? structuredClone(answers)
+      : JSON.parse(JSON.stringify(answers));
+  } catch (_) {
+    return { ...answers };
+  }
+}
+
+function quizSerializeContactForm() {
+  const form = document.querySelector('.q-contact-form');
+  if (!form) return {};
+  let fd;
+  try {
+    fd = new FormData(form);
+  } catch (_) {
+    return {};
+  }
+  return {
+    name: (fd.get('name') || '').toString(),
+    phone: (fd.get('phone') || '').toString(),
+    city: (fd.get('city') || '').toString(),
+    _consent_pd: !!form.querySelector('[name="consent_pd"]')?.checked,
+    _consent_privacy: !!form.querySelector('[name="consent_privacy"]')?.checked,
+  };
+}
+
+function quizSaveDraft() {
+  try {
+    const modal = document.getElementById('quizModal');
+    if (!modal || !modal.classList.contains('open')) return;
+    const payload = {
+      answers: quizCloneAnswers(),
+      currentStep,
+      form: quizSerializeContactForm(),
+      t: Date.now(),
+    };
+    localStorage.setItem(QUIZ_DRAFT_KEY, JSON.stringify(payload));
+  } catch (_) {}
+}
+
+function quizClearDraft() {
+  try {
+    localStorage.removeItem(QUIZ_DRAFT_KEY);
+  } catch (_) {}
+}
+
+function quizApplySelectedFromAnswers() {
+  document.querySelectorAll('.q-opt').forEach((btn) => {
+    const st = btn.dataset.step;
+    const val = btn.dataset.val;
+    if (!st || val == null) return;
+    const raw = answers[st];
+    let sel = false;
+    if (Array.isArray(raw)) sel = raw.includes(val);
+    else if (raw !== undefined && raw !== null) sel = String(raw) === String(val);
+    btn.classList.toggle('selected', !!sel);
+  });
+}
+
+/** Восстанавливает ответы и поля формы из localStorage. Не меняет видимый шаг — вызывайте showStep(5) после. */
+function quizApplyDraft() {
+  try {
+    const raw = localStorage.getItem(QUIZ_DRAFT_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== 'object') {
+      quizClearDraft();
+      return false;
+    }
+    const t = data.t || 0;
+    if (Date.now() - t > QUIZ_DRAFT_MAX_AGE_MS) {
+      quizClearDraft();
+      return false;
+    }
+    Object.keys(answers).forEach((k) => delete answers[k]);
+    const saved = data.answers;
+    if (saved && typeof saved === 'object') Object.assign(answers, saved);
+    quizApplySelectedFromAnswers();
+
+    const form = document.querySelector('.q-contact-form');
+    const f = data.form || {};
+    if (form) {
+      const nameEl = form.querySelector('[name="name"]');
+      const phoneEl = form.querySelector('[name="phone"]');
+      const cityEl = form.querySelector('[name="city"]');
+      const c1 = form.querySelector('[name="consent_pd"]');
+      const c2 = form.querySelector('[name="consent_privacy"]');
+      if (nameEl && f.name != null) nameEl.value = f.name;
+      if (phoneEl && f.phone != null) phoneEl.value = f.phone;
+      if (cityEl && f.city != null) cityEl.value = f.city;
+      if (c1 && typeof f._consent_pd === 'boolean') c1.checked = f._consent_pd;
+      if (c2 && typeof f._consent_privacy === 'boolean') c2.checked = f._consent_privacy;
+    }
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function resetQuizToEmptyContactStep() {
+  Object.keys(answers).forEach((k) => delete answers[k]);
+  document.querySelectorAll('.q-opt.selected').forEach((b) => b.classList.remove('selected'));
+  const form = document.querySelector('.q-contact-form');
+  if (form) form.reset();
+  document.querySelectorAll('.q-consent input[type="checkbox"]').forEach((c) => {
+    c.checked = false;
+  });
+  document.querySelectorAll('.q-consent').forEach((l) => l.classList.remove('quiz-consent-invalid'));
+}
+
 /** Ссылка на WhatsApp (LinkTwin) — кнопка «Связаться вне очереди» после шага «Отлично!…» */
 const WHATSAPP_QUIZ_URL = 'https://linktw.in/ocjIoY';
 
@@ -857,6 +973,7 @@ async function sendQuizLeadToTelegram(form) {
 }
 
 function openModal() {
+  quizClearDraft();
   // Компенсируем ширину скроллбара, чтобы страница не прыгала
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   document.body.style.paddingRight = scrollbarWidth + 'px';
@@ -888,9 +1005,14 @@ function closeModal() {
   document.getElementById('siteHeader').style.paddingRight = '';
 }
 
-// Открываем квиз сразу на последнем шаге ("Контакт") из футера.
-function openQuizContact(e) {
+/**
+ * Открыть квиз на шаге контактов.
+ * @param {Event|null} e
+ * @param {{ fromLegal?: boolean }} [options] — с legal-страниц: восстановить черновик из localStorage
+ */
+function openQuizContact(e, options) {
   if (e && e.preventDefault) e.preventDefault();
+  const fromLegal = options && options.fromLegal;
 
   // Открываем модалку, но НЕ вызываем openModal(),
   // чтобы не было автосброса на шаг 1.
@@ -905,18 +1027,20 @@ function openQuizContact(e) {
   const qc2 = document.querySelector('.quiz-modal .quiz-container');
   if (qc2) qc2.scrollTop = 0;
 
-  // Сбрасываем выбранные ответы и сразу ставим шаг 5.
   lastProgressPercent = 0;
+
+  if (!fromLegal) {
+    quizClearDraft();
+    resetQuizToEmptyContactStep();
+  } else {
+    const restored = quizApplyDraft();
+    if (!restored) resetQuizToEmptyContactStep();
+    document.querySelectorAll('.q-consent').forEach((l) => l.classList.remove('quiz-consent-invalid'));
+  }
+
   currentStep = 5;
   showStep(5);
-  Object.keys(answers).forEach((k) => delete answers[k]);
-  document.querySelectorAll('.q-opt.selected').forEach(b => b.classList.remove('selected'));
-  document.querySelectorAll('.q-consent input[type="checkbox"]').forEach(c => {
-    c.checked = false;
-  });
-  document.querySelectorAll('.q-consent').forEach(l => l.classList.remove('quiz-consent-invalid'));
 
-  // Небольшая задержка, чтобы DOM уже успел отрисовать шаг.
   setTimeout(() => {
     const nameInput = document.querySelector('#step5 input[name="name"]');
     if (nameInput) nameInput.focus();
@@ -984,6 +1108,7 @@ function nextStep() {
 
     currentStep++;
     showStep(currentStep);
+    quizSaveDraft();
   }
 }
 
@@ -994,6 +1119,7 @@ function prevStep() {
   }
   currentStep--;
   showStep(currentStep);
+  quizSaveDraft();
 }
 
 /** Валидация шага 5 (контакты). true — можно открывать WhatsApp и показывать успех. */
@@ -1094,6 +1220,7 @@ async function onQuizWhatsAppCtaClick(e) {
 
   try {
     await sendQuizLeadToTelegram(form);
+    quizClearDraft();
     showQuizSuccessScreen();
   } catch (err) {
     console.error(err);
@@ -1132,6 +1259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       answers[step] = btn.dataset.val;
+      quizSaveDraft();
       setTimeout(nextStep, 300);
     });
   });
@@ -1172,8 +1300,32 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         answers[step] = answers[step].filter(v => v !== val);
       }
+      quizSaveDraft();
     });
   });
+
+  const quizModalEl = document.getElementById('quizModal');
+  if (quizModalEl) {
+    let quizDraftTimer;
+    quizModalEl.addEventListener('input', () => {
+      clearTimeout(quizDraftTimer);
+      quizDraftTimer = setTimeout(quizSaveDraft, 280);
+    });
+    quizModalEl.addEventListener('change', () => quizSaveDraft());
+    quizModalEl.addEventListener('click', (ev) => {
+      if (ev.target.closest('a.q-doc-link')) quizSaveDraft();
+    });
+  }
+
+  function handleQuizContactHash() {
+    if (location.hash !== '#quiz-contact') return;
+    openQuizContact(null, { fromLegal: true });
+    try {
+      history.replaceState(null, '', location.pathname + location.search);
+    } catch (_) {}
+  }
+  handleQuizContactHash();
+  window.addEventListener('hashchange', handleQuizContactHash);
 
   /* =============================================
      SCROLL ANIMATIONS — Law cards
