@@ -234,7 +234,8 @@ h3 { font-weight: normal; font-size: 1.05rem; }
 .btn-header.btn-header--solid {
   background: var(--blue);
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.22);
+  /* убираем обводку, чтобы осталась только заливка */
+  border-color: transparent;
   transition:
     background 1.35s cubic-bezier(0.4, 0, 0.2, 1),
     color 1.35s cubic-bezier(0.4, 0, 0.2, 1),
@@ -246,7 +247,7 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   transition: background 0.2s ease, color 0.2s ease;
 }
 .btn-header.btn-header--solid::before {
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: transparent;
 }
 
 /* Статичная базовая обводка */
@@ -2052,7 +2053,7 @@ blockquote {
 .quiz-progress-fill{
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--blue) 0%, #59cf95 58%, var(--mint-g17) 100%);
+  background: #000;
   border-radius: 999px 0 0 999px; /* скругляем только слева, чтобы не было зазора на границах */
   transition: width 0.35s ease;
   position: relative;
@@ -2398,26 +2399,26 @@ blockquote {
 .q-btn-next {
   flex: 1;
   padding: 11px 18px;
-  background: transparent;
-  border: 1px solid var(--mint-g17);
+  background: #043b23;
+  border: 1px solid #043b23;
   border-radius: 3px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.86rem;
   font-weight: 500;
-  color: #1f8f61;
+  color: #fff;
   cursor: pointer;
   transition: var(--trans);
   text-align: center;
 }
 .q-btn-next:hover {
-  background: var(--mint-g17);
-  border-color: var(--mint-g17);
-  color: #043b23;
+  background: #1f8f61;
+  border-color: #1f8f61;
+  color: #fff;
 }
 .q-btn-next:active {
-  background: var(--mint-g17);
-  border-color: var(--mint-g17);
-  color: #043b23;
+  background: #043b23;
+  border-color: #043b23;
+  color: #fff;
 }
 
 /* Submit на шаге 5 (ссылка на WhatsApp — как кнопка) */
