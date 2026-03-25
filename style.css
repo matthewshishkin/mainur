@@ -1437,6 +1437,24 @@ blockquote {
   animation-delay: 3.5s;
 }
 
+/* «С нами»: полностью убрать анимацию (текст и пункты списка) */
+.pricing-section .tariff-card--filled .tariff-title,
+.pricing-section .tariff-card--filled .tariff-list li {
+  animation: none !important;
+  opacity: 1 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  transform: none !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.pricing-section .tariff-card--filled .tariff-list li:not(:last-child) {
+  margin-bottom: 10px;
+}
+
 /* Кнопки тарифов: мягкая тряска по rotate; без scale и без сдвига */
 @keyframes tariff-btn-shake-only {
   0%,
