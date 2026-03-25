@@ -389,7 +389,7 @@ function updateHeaderGlassProgress() {
 }
 
 /**
- * После полного прохолжения 2-го блока (.law-section) кнопка в шапке — белая с чёрным текстом.
+ * После полного прохолжения 2-го блока (.law-section) кнопка в шапке — бордовая с белым текстом.
  * Класс не снимается при возврате к 1-му блоку; после перезагрузки страницы снова стандартный вид.
  */
 function updateHeaderCtaAfterSecondBlock() {
@@ -809,8 +809,6 @@ function quizSerializeContactForm() {
     name: (fd.get('name') || '').toString(),
     phone: (fd.get('phone') || '').toString(),
     city: (fd.get('city') || '').toString(),
-    _consent_pd: !!form.querySelector('[name="consent_pd"]')?.checked,
-    _consent_privacy: !!form.querySelector('[name="consent_privacy"]')?.checked,
   };
 }
 
@@ -845,6 +843,17 @@ function quizApplySelectedFromAnswers() {
     else if (raw !== undefined && raw !== null) sel = String(raw) === String(val);
     btn.classList.toggle('selected', !!sel);
   });
+  const q1Other = document.getElementById('q1OtherWrap');
+  const q1Inp = document.getElementById('q1OtherInput');
+  if (answers[1] === 'other' && q1Other && q1Inp) {
+    q1Other.classList.remove('q-other-field--hidden');
+    q1Inp.value = answers['1_other'] || '';
+    q1Inp.classList.remove('q-other-input--invalid');
+  } else if (q1Other && q1Inp) {
+    q1Other.classList.add('q-other-field--hidden');
+    q1Inp.value = '';
+    q1Inp.classList.remove('q-other-input--invalid');
+  }
 }
 
 /** Восстанавливает ответы и поля формы из localStorage. Не меняет видимый шаг — вызывайте showStep(5) после. */
@@ -873,13 +882,9 @@ function quizApplyDraft() {
       const nameEl = form.querySelector('[name="name"]');
       const phoneEl = form.querySelector('[name="phone"]');
       const cityEl = form.querySelector('[name="city"]');
-      const c1 = form.querySelector('[name="consent_pd"]');
-      const c2 = form.querySelector('[name="consent_privacy"]');
       if (nameEl && f.name != null) nameEl.value = f.name;
       if (phoneEl && f.phone != null) phoneEl.value = f.phone;
       if (cityEl && f.city != null) cityEl.value = f.city;
-      if (c1 && typeof f._consent_pd === 'boolean') c1.checked = f._consent_pd;
-      if (c2 && typeof f._consent_privacy === 'boolean') c2.checked = f._consent_privacy;
     }
     return true;
   } catch (_) {
@@ -892,10 +897,13 @@ function resetQuizToEmptyContactStep() {
   document.querySelectorAll('.q-opt.selected').forEach((b) => b.classList.remove('selected'));
   const form = document.querySelector('.q-contact-form');
   if (form) form.reset();
-  document.querySelectorAll('.q-consent input[type="checkbox"]').forEach((c) => {
-    c.checked = false;
-  });
-  document.querySelectorAll('.q-consent').forEach((l) => l.classList.remove('quiz-consent-invalid'));
+  const q1Other = document.getElementById('q1OtherWrap');
+  const q1Inp = document.getElementById('q1OtherInput');
+  if (q1Other) q1Other.classList.add('q-other-field--hidden');
+  if (q1Inp) {
+    q1Inp.value = '';
+    q1Inp.classList.remove('q-other-input--invalid');
+  }
 }
 
 /** Ссылка на WhatsApp (LinkTwin) — кнопка «Связаться вне очереди» после шага «Отлично!…» */
@@ -925,6 +933,12 @@ function formatQuizAnswerForStep(step) {
   if (Array.isArray(raw)) {
     if (raw.length === 0) return '—';
     return raw.map((v) => getQuizOptionLabel(step, v)).join(', ');
+  }
+  if (step === 1 && raw === 'other') {
+    const detail = (answers['1_other'] || document.getElementById('q1OtherInput')?.value || '').trim();
+    const kk = typeof window !== 'undefined' && window.SiteI18n && window.SiteI18n.getLang() === 'kk';
+    if (detail) return kk ? `Басқа: ${detail}` : `Другое: ${detail}`;
+    return kk ? 'Басқа (көрсетілмеген)' : 'Другое (не указано)';
   }
   return getQuizOptionLabel(step, raw);
 }
@@ -992,10 +1006,13 @@ function openModal() {
   showStep(1);
   Object.keys(answers).forEach((k) => delete answers[k]);
   document.querySelectorAll('.q-opt.selected').forEach(b => b.classList.remove('selected'));
-  document.querySelectorAll('.q-consent input[type="checkbox"]').forEach(c => {
-    c.checked = false;
-  });
-  document.querySelectorAll('.q-consent').forEach(l => l.classList.remove('quiz-consent-invalid'));
+  const q1Other = document.getElementById('q1OtherWrap');
+  const q1Inp = document.getElementById('q1OtherInput');
+  if (q1Other) q1Other.classList.add('q-other-field--hidden');
+  if (q1Inp) {
+    q1Inp.value = '';
+    q1Inp.classList.remove('q-other-input--invalid');
+  }
 }
 
 function closeModal() {
@@ -1035,7 +1052,6 @@ function openQuizContact(e, options) {
   } else {
     const restored = quizApplyDraft();
     if (!restored) resetQuizToEmptyContactStep();
-    document.querySelectorAll('.q-consent').forEach((l) => l.classList.remove('quiz-consent-invalid'));
   }
 
   currentStep = 5;
@@ -1089,6 +1105,21 @@ function updateProgress(step) {
 
 function nextStep() {
   if (currentStep <= TOTAL_STEPS) {
+    // Шаг 1 «Другое»: нужен непустой ввод (без автоперехода по клику на карточку)
+    if (currentStep === 1 && answers[1] === 'other') {
+      const inp = document.getElementById('q1OtherInput');
+      const t = inp && inp.value.trim();
+      if (!t) {
+        if (inp) {
+          inp.classList.add('q-other-input--invalid');
+          inp.focus();
+        }
+        return;
+      }
+      answers['1_other'] = t;
+      if (inp) inp.classList.remove('q-other-input--invalid');
+    }
+
     // На шагах 1–4 нельзя переходить без выбора ответа.
     if (currentStep >= 1 && currentStep <= TOTAL_STEPS) {
       const stepOpts = document.querySelectorAll(`.q-opt[data-step="${currentStep}"]`);
@@ -1159,27 +1190,6 @@ function validateQuizContactForm(form) {
     return false;
   }
 
-  const consentPd = form.querySelector('input[name="consent_pd"]');
-  const consentPrivacy = form.querySelector('input[name="consent_privacy"]');
-  form.querySelectorAll('.q-consent').forEach(l => l.classList.remove('quiz-consent-invalid'));
-  if (!consentPd || !consentPrivacy || !consentPd.checked || !consentPrivacy.checked) {
-    if (consentPd && !consentPd.checked) {
-      const lab = consentPd.closest('.q-consent');
-      if (lab) {
-        void lab.offsetWidth;
-        lab.classList.add('quiz-consent-invalid');
-      }
-    }
-    if (consentPrivacy && !consentPrivacy.checked) {
-      const lab = consentPrivacy.closest('.q-consent');
-      if (lab) {
-        void lab.offsetWidth;
-        lab.classList.add('quiz-consent-invalid');
-      }
-    }
-    return false;
-  }
-
   return true;
 }
 
@@ -1191,6 +1201,11 @@ function submitQuizLastStep(e) {
 }
 
 /** Экран «Заявка принята!» — сразу после шага с контактами (внутри модалки квиза) */
+function redirectToThankYouPage() {
+  const isKk = typeof window !== 'undefined' && window.SiteI18n && window.SiteI18n.getLang() === 'kk';
+  window.location.href = isKk ? 'thank-you-kk.html' : 'thank-you.html';
+}
+
 function showQuizSuccessScreen() {
   const formScreen = document.getElementById('quizFormScreen');
   const successEl = document.getElementById('quizSuccess');
@@ -1221,7 +1236,7 @@ async function onQuizWhatsAppCtaClick(e) {
   try {
     await sendQuizLeadToTelegram(form);
     quizClearDraft();
-    showQuizSuccessScreen();
+    redirectToThankYouPage();
   } catch (err) {
     console.error(err);
     alert('Заявка отправлена, мы свяжемся с вами!');
@@ -1244,25 +1259,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const waCta = document.getElementById('quizWhatsAppCta');
   if (waCta) waCta.addEventListener('click', onQuizWhatsAppCtaClick);
 
-  document.querySelectorAll('.q-consent input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const lab = cb.closest('.q-consent');
-      if (lab) lab.classList.remove('quiz-consent-invalid');
-    });
-  });
-
-  // Single-choice: auto-advance
+  // Single-choice: auto-advance (кроме шага 1 «Другое…» — нужен ввод и «Далее»)
   document.querySelectorAll('.q-opt.single').forEach(btn => {
     btn.addEventListener('click', () => {
       const step = btn.dataset.step;
+      const val = btn.dataset.val;
       document.querySelectorAll(`.q-opt.single[data-step="${step}"]`)
         .forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      answers[step] = btn.dataset.val;
+      answers[step] = val;
+      if (step === '1') {
+        const wrap = document.getElementById('q1OtherWrap');
+        const inp = document.getElementById('q1OtherInput');
+        if (val === 'other') {
+          if (wrap) wrap.classList.remove('q-other-field--hidden');
+          delete answers['1_other'];
+          if (inp) {
+            inp.classList.remove('q-other-input--invalid');
+            setTimeout(() => inp.focus(), 0);
+          }
+          quizSaveDraft();
+          return;
+        }
+        if (wrap) wrap.classList.add('q-other-field--hidden');
+        if (inp) {
+          inp.value = '';
+          inp.classList.remove('q-other-input--invalid');
+        }
+        delete answers['1_other'];
+      }
       quizSaveDraft();
       setTimeout(nextStep, 300);
     });
   });
+
+  const q1OtherInput = document.getElementById('q1OtherInput');
+  if (q1OtherInput) {
+    q1OtherInput.addEventListener('input', () => {
+      if (answers[1] === 'other') {
+        answers['1_other'] = q1OtherInput.value.trim();
+        quizSaveDraft();
+      }
+    });
+  }
 
   // Multi-choice: toggle
   document.querySelectorAll('.q-opt.multi').forEach(btn => {

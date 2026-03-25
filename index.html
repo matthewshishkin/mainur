@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=173" />
+  <link rel="stylesheet" href="style.css?v=175" />
 </head>
 <body>
   <div id="siteLoadingOverlay" class="site-loading-overlay" aria-hidden="true">
@@ -210,19 +210,19 @@
         <div class="stats-showcase-label" data-i18n="stat_l1">мед. образования как повышение квалификации</div>
       </div>
       <div class="stats-showcase-item" data-stat-index="2">
-        <div class="stats-showcase-num" data-counter data-target="22" data-suffix="">0</div>
-        <div class="stats-showcase-label" data-i18n="stat_l2">юриста в команде</div>
+        <div class="stats-showcase-num" data-counter data-target="12" data-suffix="">0</div>
+        <div class="stats-showcase-label" data-i18n="stat_l2">юристов в команде</div>
       </div>
       <div class="stats-showcase-item" data-stat-index="3">
         <div class="stats-showcase-num" data-counter data-target="30" data-suffix="+">0+</div>
         <div class="stats-showcase-label" data-i18n="stat_l3">лет опыта в трудовом праве и медицинском</div>
       </div>
       <div class="stats-showcase-item" data-stat-index="4">
-        <div class="stats-showcase-num" data-counter data-target="30" data-suffix="+">0+</div>
+        <div class="stats-showcase-num" data-counter data-target="15" data-suffix="">0</div>
         <div class="stats-showcase-label" data-i18n="stat_l4">клиник в портфолио</div>
       </div>
       <div class="stats-showcase-item" data-stat-index="5">
-        <div class="stats-showcase-num" data-counter data-target="780" data-suffix=" млн ₸" data-i18n-suffix="stat_suf_mln" data-duration="3500">0 млн ₸</div>
+        <div class="stats-showcase-num" data-counter data-target="384" data-suffix=" млн ₸" data-i18n-suffix="stat_suf_mln" data-duration="3500">0 млн ₸</div>
         <div class="stats-showcase-label" data-i18n="stat_l5">сэкономлено клиентам на штрафах</div>
       </div>
     </div>
@@ -340,13 +340,13 @@
         <div class="tariff-card tariff-card--filled">
           <h3 class="tariff-title" data-i18n="tar_in_t">С нами</h3>
           <ul class="tariff-list">
-            <li data-i18n="tar_in_1">Команда профильных юристов по медицине</li>
-            <li data-i18n="tar_in_2">Быстрое внедрение законодательных обновлений</li>
-            <li data-i18n="tar_in_3">Снижение рисков штрафов и судебных споров</li>
-            <li data-i18n="tar_in_4">Регулярная поддержка и готовые решения</li>
+            <li data-i18n="tar_in_1">Каждый юрист с мед.образованием</li>
+            <li data-i18n="tar_in_2">Внедрение законодательных обновлений за 1 день</li>
+            <li data-i18n="tar_in_3">Снизим риск штрафов до 25 млн ₸</li>
+            <li data-i18n="tar_in_4">Юрист на связи по графику</li>
             <li data-i18n="tar_in_5">Персональный юрист на связи в рабочие часы</li>
-            <li id="tariff-filled-trigger-line" data-i18n="tar_in_6">Проверка и сопровождение договоров с пациентами и персоналом</li>
-            <li data-i18n="tar_in_7">Защита интересов клиники при проверках Минздрава и прокуратуры</li>
+            <li id="tariff-filled-trigger-line" data-i18n="tar_in_6">Прочные договоры с пациентами и врачами</li>
+            <li data-i18n="tar_in_7">Доп. защита при проверках минздрава и прокураторы</li>
           </ul>
           <button class="btn tariff-btn tariff-btn--filled" type="button" onclick="openModal()" data-i18n="tar_in_btn" data-i18n-html="true">от&nbsp;240&nbsp;000₸</button>
         </div>
@@ -368,6 +368,11 @@
       <div class="cta-photo-col">
         <img src="hero26.jpg" alt="Майнур — юрист по медицинскому праву" class="cta-img" data-i18n-alt="cta_img_alt" />
       </div>
+    </div>
+    <div class="container cta-legal-wrap">
+      <p class="cta-legal-inner" data-i18n="cta_privacy_html" data-i18n-html="true">
+        <a href="privacy.html" class="cta-privacy-link">Политика конфиденциальности</a>
+      </p>
     </div>
   </section>
 
@@ -396,9 +401,12 @@
           <p class="q-hint" data-i18n="q1_hint">Выберите один вариант</p>
           <div class="q-options">
             <button class="q-opt single" data-step="1" data-val="clinic" data-i18n="q1_o1">Многопрофильная клиника</button>
-            <button class="q-opt single" data-step="1" data-val="dental" data-i18n="q1_o2">Стоматология</button>
-            <button class="q-opt single" data-step="1" data-val="cosmo" data-i18n="q1_o3">Косметология</button>
-            <button class="q-opt single" data-step="1" data-val="diagnostic" data-i18n="q1_o4">Лаборатория</button>
+            <button class="q-opt single" data-step="1" data-val="lab" data-i18n="q1_o2">Лаборатория</button>
+            <button class="q-opt single" data-step="1" data-val="cabinet" data-i18n="q1_o3">Мед. кабинет</button>
+            <button class="q-opt single q-opt--other" data-step="1" data-val="other" data-i18n="q1_o4">Другое…</button>
+          </div>
+          <div class="q-other-field q-other-field--hidden" id="q1OtherWrap">
+            <input type="text" id="q1OtherInput" class="q-other-input" maxlength="140" data-i18n-placeholder="q1_other_ph" placeholder="Укажите тип организации" autocomplete="off" aria-label="" data-i18n-aria="q1_other_aria" />
           </div>
           <div class="q-nav">
             <button type="button" class="q-btn-back" onclick="prevStep()" data-i18n="q_back">Назад</button>
@@ -414,7 +422,7 @@
             <button class="q-opt single" data-step="2" data-val="new" data-i18n="q2_o1">Менее 1 года</button>
             <button class="q-opt single" data-step="2" data-val="mid" data-i18n="q2_o2">1–3 года</button>
             <button class="q-opt single" data-step="2" data-val="old" data-i18n="q2_o3">Более 3 лет</button>
-            <button class="q-opt single" data-step="2" data-val="network" data-i18n="q2_o4">Сеть клиник</button>
+            <button class="q-opt single" data-step="2" data-val="network" data-i18n="q2_o4">7-10+ лет</button>
           </div>
           <div class="q-nav">
             <button type="button" class="q-btn-back" onclick="prevStep()" data-i18n="q_back">Назад</button>
@@ -468,30 +476,7 @@
               required
               autocomplete="tel"
             />
-            <select name="city" required class="q-city-select" data-i18n-aria="q_city_aria" aria-label="Выберите город">
-              <option value="" selected disabled data-i18n="q_city_pl">Выберите город</option>
-              <option value="Алматы">Алматы</option>
-              <option value="Астана">Астана</option>
-              <option value="Шымкент">Шымкент</option>
-              <option value="Караганда">Караганда</option>
-              <option value="Актобе">Актобе</option>
-              <option value="Костанай">Костанай</option>
-              <option value="Павлодар">Павлодар</option>
-              <option value="Атырау">Атырау</option>
-              <option value="Усть-Каменогорск">Усть-Каменогорск</option>
-              <option value="Актау">Актау</option>
-            </select>
-
-            <label class="q-consent">
-              <input type="checkbox" name="consent_pd" value="1" required />
-              <span class="q-consent-box" aria-hidden="true"></span>
-              <span class="q-consent-text" data-i18n="q_consent_pd_html" data-i18n-html="true">Даю согласие на <a href="personal-data.html" target="_blank" rel="noopener noreferrer" class="q-doc-link">обработку персональных данных</a></span>
-            </label>
-            <label class="q-consent">
-              <input type="checkbox" name="consent_privacy" value="1" required />
-              <span class="q-consent-box" aria-hidden="true"></span>
-              <span class="q-consent-text" data-i18n="q_consent_pr_html" data-i18n-html="true">Ознакомлен(а) с <a href="privacy.html" target="_blank" rel="noopener noreferrer" class="q-doc-link">политикой конфиденциальности</a></span>
-            </label>
+            <input type="text" name="city" required class="q-city-select" data-i18n-placeholder="q_city_pl" data-i18n-aria="q_city_aria" aria-label="Укажите город" placeholder="Укажите город" autocomplete="address-level2" />
 
             <div class="q-nav q-nav-submit">
               <button type="button" class="q-btn-back" onclick="prevStep()" data-i18n="q_back">Назад</button>
@@ -518,7 +503,7 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=7"></script>
-  <script src="script.js?v=60"></script>
+  <script src="i18n.js?v=9"></script>
+  <script src="script.js?v=62"></script>
 </body>
 </html>
