@@ -1071,22 +1071,6 @@ blockquote {
   align-items: start;
 }
 
-/* Вторая карточка скрыта, пока не прошла пауза после анимации первой (класс .tariff-second-visible — JS) */
-.tariff-grid:not(.tariff-second-visible) .tariff-card--filled {
-  display: none !important;
-}
-
-@media (min-width: 701px) {
-  .tariff-grid:not(.tariff-second-visible) {
-    grid-template-columns: 1fr;
-  }
-  .tariff-grid:not(.tariff-second-visible) .tariff-card--outline {
-    max-width: min(560px, 100%);
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
 @media (min-width: 961px) {
   .tariff-grid {
     gap: 64px;
@@ -1437,7 +1421,9 @@ blockquote {
   animation-delay: 3.5s;
 }
 
-/* «С нами»: полностью убрать анимацию (текст и пункты списка) */
+/* Карточки тарифов: без анимаций (заголовок и пункты списка) */
+.pricing-section .tariff-card--outline .tariff-title,
+.pricing-section .tariff-card--outline .tariff-list li,
 .pricing-section .tariff-card--filled .tariff-title,
 .pricing-section .tariff-card--filled .tariff-list li {
   animation: none !important;
@@ -1451,56 +1437,11 @@ blockquote {
   margin-bottom: 0 !important;
 }
 
-/* Как в «Юрист в штате» (10px между строками после анимации): gap, т.к. margin сброшен !important */
+.pricing-section .tariff-card--outline .tariff-list,
 .pricing-section .tariff-card--filled .tariff-list {
   gap: 10px;
 }
 
-/* Кнопки тарифов: мягкая тряска по rotate; без scale и без сдвига */
-@keyframes tariff-btn-shake-only {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  8% {
-    transform: rotate(-0.2deg);
-  }
-  16% {
-    transform: rotate(0.16deg);
-  }
-  24% {
-    transform: rotate(-0.12deg);
-  }
-  32% {
-    transform: rotate(0.09deg);
-  }
-  40% {
-    transform: rotate(-0.06deg);
-  }
-  48% {
-    transform: rotate(0.04deg);
-  }
-  56% {
-    transform: rotate(0deg);
-  }
-  64% {
-    transform: rotate(-0.14deg);
-  }
-  72% {
-    transform: rotate(0.1deg);
-  }
-  80% {
-    transform: rotate(-0.06deg);
-  }
-  88% {
-    transform: rotate(0.03deg);
-  }
-  94% {
-    transform: rotate(0deg);
-  }
-}
-
-/* Мобила: анимации текста/кнопки цены — только после скролла к блоку (класс .tariff-animate-ready задаёт JS) */
 @media (max-width: 700px) {
   /*
     Одна колонка: убираем десктопный min-height у «С нами» и flex:1 у списка —
@@ -1547,19 +1488,12 @@ blockquote {
     overflow: visible !important;
   }
 
-  .pricing-section .tariff-card--outline .tariff-list li:not(:last-child) {
-    margin-bottom: 10px;
-  }
-
   .pricing-section .tariff-btn--outline.tariff-btn--staff-price:disabled {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
   }
 
-  .pricing-section .tariff-grid .tariff-card--filled {
-    display: flex !important;
-  }
 }
 
 .tariff-btn {
@@ -1587,7 +1521,7 @@ blockquote {
   color: #fff;
 }
 
-/* Цена «600 000 ₸» в «Юрист в штате»: не кликабельно; после списка — тряска 2 с */
+/* Цена «600 000 ₸» в «Юрист в штате»: не кликабельно */
 .tariff-btn--outline.tariff-btn--staff-price:disabled {
   opacity: 1;
   cursor: default;
@@ -1597,8 +1531,7 @@ blockquote {
   border: 0.75px solid var(--blue);
   transition: none;
   transform-origin: center center;
-  animation: tariff-btn-shake-only 3.2s cubic-bezier(0.45, 0, 0.55, 1) forwards;
-  animation-delay: 2.52s;
+  animation: none;
 }
 
 /* «С нами»: кнопка без заливки, только обводка; без анимации */
@@ -1638,10 +1571,6 @@ blockquote {
     margin-top: 0;
     margin-bottom: 0;
     overflow: visible !important;
-  }
-
-  .tariff-card--outline .tariff-list li:not(:last-child) {
-    margin-bottom: 10px;
   }
 
   .tariff-card--outline .tariff-title {
