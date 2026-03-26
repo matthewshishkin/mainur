@@ -338,7 +338,7 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   padding: 10px 14px;
   border-radius: 3px; /* как у кнопок */
   background: rgba(255, 255, 255, 0.09); /* стеклянная заливка (чуть прозрачнее) */
-  border: 0.75px solid rgba(255, 255, 255, 0.28);
+  border: none;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #fff;
@@ -347,6 +347,10 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   font-weight: 300;
   line-height: 1.2;
   box-shadow: none;
+}
+
+.hero-pill-emph {
+  font-weight: 500;
 }
 
 .hero-arrows {
@@ -1744,6 +1748,41 @@ blockquote {
   font-size: clamp(1.02rem, 2.091vw, 2.652rem); /* как в 1-м блоке */
   font-weight: 500;
 }
+
+/* CTA title: shimmer as in hero (text only) */
+.cta-title-text {
+  display: inline-block;
+  color: rgba(17, 24, 39, 0.68);
+}
+
+@supports (-webkit-background-clip: text) {
+  @keyframes ctaTitleSheen {
+    0%      { background-position: 0 0, 220% 50%; }
+    97.06%  { background-position: 0 0, -220% 50%; }
+    100%    { background-position: 0 0, -220% 50%; }
+  }
+
+  .cta-title-text {
+    background-image:
+      linear-gradient(rgba(17, 24, 39, 0.68), rgba(17, 24, 39, 0.68)),
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 35%,
+        rgba(255, 255, 255, 0.22) 42%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(255, 255, 255, 0.22) 58%,
+        rgba(255, 255, 255, 0) 65%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    background-size: 100% 100%, 240% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: ctaTitleSheen 3.4s linear infinite;
+  }
+}
 .cta-content h2 .cta-amount {
   color: var(--blue);
   font-weight: 600;
@@ -3091,13 +3130,17 @@ a.q-submit-btn {
     -webkit-backdrop-filter: blur(8px);
   }
 
+  .hero-pill-emph {
+    font-weight: 500;
+  }
+
   /* Кнопка в самый низ блока */
   .hero--video .hero-btn {
     position: absolute;
     left: 24px;
     right: 24px;
     transform: none;
-    bottom: 102px;
+    bottom: 128px;
     margin-top: 0;
     width: auto;
     display: block;
