@@ -1369,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* =============================================
      SCROLL ANIMATIONS — Law cards
      ============================================= */
-  const lawCards = document.querySelectorAll('.law-card');
+  const cardsToAnimate = document.querySelectorAll('.law-card, .risk-card');
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1381,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
 
-  lawCards.forEach(card => observer.observe(card));
+  cardsToAnimate.forEach(card => observer.observe(card));
 
   /* =============================================
      Telegram spoiler (canvas particles)

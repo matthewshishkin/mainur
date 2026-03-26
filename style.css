@@ -479,10 +479,19 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  /* как во 2-м блоке: fade-up при появлении */
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.risk-card.animate-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .risk-label {
-  font-size: 3rem; /* +20% к текущему размеру */
+  font-size: 3.6rem;
   font-weight: 700;
   font-family: 'PlayfairDisplay', Arial, Helvetica, sans-serif;
   color: #111;
