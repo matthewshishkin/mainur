@@ -778,11 +778,11 @@ window.addEventListener('pageshow', updateHeaderCtaAfterSecondBlock);
    QUIZ MODAL
    ============================================= */
 let currentStep = 1;
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 const answers = {};
 let lastProgressPercent = 0;
 
-/** Черновик квиза (шаги 1–5, форма) — для возврата с legal-страниц в новой вкладке */
+/** Черновик квиза (шаги 1–6, форма) — для возврата с legal-страниц в новой вкладке */
 const QUIZ_DRAFT_KEY = 'mainur_quiz_draft_v1';
 const QUIZ_DRAFT_MAX_AGE_MS = 1000 * 60 * 60 * 24; // 24 ч
 
@@ -856,7 +856,7 @@ function quizApplySelectedFromAnswers() {
   }
 }
 
-/** Восстанавливает ответы и поля формы из localStorage. Не меняет видимый шаг — вызывайте showStep(5) после. */
+/** Восстанавливает ответы и поля формы из localStorage. Не меняет видимый шаг — вызывайте showStep(6) после. */
 function quizApplyDraft() {
   try {
     const raw = localStorage.getItem(QUIZ_DRAFT_KEY);
@@ -1213,7 +1213,7 @@ function closeModal() {
 }
 
 /**
- * Открыть квиз на шаге контактов.
+ * Открыть квиз на шаге контактов (шаг 6).
  * @param {Event|null} e
  * @param {{ fromLegal?: boolean }} [options] — с legal-страниц: восстановить черновик из localStorage
  */
@@ -1245,11 +1245,11 @@ function openQuizContact(e, options) {
     if (!restored) resetQuizToEmptyContactStep();
   }
 
-  currentStep = 5;
-  showStep(5);
+  currentStep = 6;
+  showStep(6);
 
   setTimeout(() => {
-    const nameInput = document.querySelector('#step5 input[name="name"]');
+    const nameInput = document.querySelector('#step6 input[name="name"]');
     if (nameInput) nameInput.focus();
   }, 60);
 }
@@ -1263,7 +1263,7 @@ function showStep(n) {
 }
 
 function updateProgress(step) {
-  // Прогресс: 4 вопроса + контакт = 5 частей (20/40/60/80/99% — на шаге контактов не 100%, а 99%)
+  // Прогресс: 5 вопросов + контакт = 6 частей (до контактов равные части, на контактах 99%)
   const percent = step <= TOTAL_STEPS ? step * (100 / (TOTAL_STEPS + 1)) : 99;
   const p = Math.round(percent);
   const textEl = document.getElementById('quizProgressText');
@@ -1311,7 +1311,7 @@ function nextStep() {
       if (inp) inp.classList.remove('q-other-input--invalid');
     }
 
-    // На шагах 1–4 нельзя переходить без выбора ответа.
+    // На шагах 1–5 нельзя переходить без выбора ответа.
     if (currentStep >= 1 && currentStep <= TOTAL_STEPS) {
       const stepOpts = document.querySelectorAll(`.q-opt[data-step="${currentStep}"]`);
       const anySelected = Array.from(stepOpts).some(opt => opt.classList.contains('selected'));
