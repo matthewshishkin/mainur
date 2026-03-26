@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const items = Array.from(document.querySelectorAll('.stats-showcase-item'));
   if (!section || !items.length) return;
 
-  const DEFAULT_DURATION_MS = 1100; /* быстрая анимация; для отдельных — data-duration (напр. 780 млн = 3500) */
+  const DEFAULT_DURATION_MS = 550; /* в 2 раза быстрее; для отдельных — data-duration (делим на 2) */
 
   const animateCounter = (el) => new Promise((resolve) => {
     if (!el || el.dataset.countDone === '1') {
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const suffix = el.dataset.suffix || '';
     const customMs = Number(el.dataset.duration);
     const duration =
-      Number.isFinite(customMs) && customMs > 0 ? customMs : DEFAULT_DURATION_MS;
+      Number.isFinite(customMs) && customMs > 0 ? Math.max(1, customMs / 2) : DEFAULT_DURATION_MS;
     const start = performance.now();
 
     const tick = (now) => {
@@ -986,6 +986,114 @@ async function sendQuizLeadToTelegram(form) {
   return true;
 }
 
+/* =============================================
+   QUIZ — priority timer (03:00 → 00:00)
+   - starts when quiz opens
+   - pauses when quiz closes (keeps remaining)
+   - resets on page reload (no persistence)
+   - first minute is accelerated: 03:00 → 02:00 in 30s real time
+   ============================================= */
+let quizPriorityRemainingMs = 3 * 60 * 1000; // 03:00
+let quizPriorityLastTs = 0;
+let quizPriorityRaf = null;
+let quizPriorityExpired = false;
+
+function formatMmSs(ms) {
+  const totalSec = Math.max(0, Math.ceil(ms / 1000));
+  const mm = Math.floor(totalSec / 60);
+  const ss = totalSec % 60;
+  return `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+}
+
+function quizPriorityRender() {
+  const label = (window.SiteI18n && window.SiteI18n.STRINGS)
+    ? ((() => {
+        const lang = window.SiteI18n.getLang ? window.SiteI18n.getLang() : 'ru';
+        const dict = (window.SiteI18n.STRINGS && window.SiteI18n.STRINGS[lang]) || window.SiteI18n.STRINGS.ru || {};
+        return quizPriorityExpired ? (dict.q_timer_expired || 'Приоритетная обработка заявки недоступна') : (dict.q_timer_label || 'Сгорает: приоритетная обработка заявки');
+      })())
+    : (quizPriorityExpired ? 'Приоритетная обработка заявки недоступна' : 'Сгорает: приоритетная обработка заявки');
+  const time = quizPriorityExpired ? '00:00' : formatMmSs(quizPriorityRemainingMs);
+
+  document.querySelectorAll('.js-q-timer-label').forEach((el) => {
+    el.textContent = label;
+  });
+  document.querySelectorAll('.js-q-timer-time').forEach((el) => {
+    el.textContent = time;
+  });
+}
+
+function quizPriorityStep(now) {
+  if (quizPriorityExpired) return;
+
+  if (!quizPriorityLastTs) quizPriorityLastTs = now;
+  let dt = now - quizPriorityLastTs;
+  quizPriorityLastTs = now;
+  if (!Number.isFinite(dt) || dt < 0) dt = 0;
+
+  // Accelerated zone: only while remaining > 02:00
+  const THRESHOLD_MS = 2 * 60 * 1000; // 02:00
+  if (quizPriorityRemainingMs > THRESHOLD_MS) {
+    const toThresholdDisplay = quizPriorityRemainingMs - THRESHOLD_MS;
+    const toThresholdReal = toThresholdDisplay / 2; // 2× speed
+    if (dt <= toThresholdReal) {
+      quizPriorityRemainingMs -= dt * 2;
+      dt = 0;
+    } else {
+      quizPriorityRemainingMs = THRESHOLD_MS;
+      dt -= toThresholdReal;
+    }
+  }
+
+  // Normal zone
+  if (dt > 0) {
+    quizPriorityRemainingMs -= dt;
+  }
+
+  if (quizPriorityRemainingMs <= 0) {
+    quizPriorityRemainingMs = 0;
+    quizPriorityExpired = true;
+  }
+
+  quizPriorityRender();
+}
+
+function quizPriorityStart() {
+  const modal = document.getElementById('quizModal');
+  if (!modal || !modal.classList.contains('open')) return;
+  if (quizPriorityRaf != null) return; // already running
+
+  quizPriorityLastTs = 0;
+  quizPriorityRender();
+
+  const loop = (now) => {
+    const m = document.getElementById('quizModal');
+    if (!m || !m.classList.contains('open')) {
+      quizPriorityRaf = null;
+      quizPriorityLastTs = 0;
+      return;
+    }
+    quizPriorityStep(now);
+    if (!quizPriorityExpired) {
+      quizPriorityRaf = requestAnimationFrame(loop);
+    } else {
+      quizPriorityRaf = null;
+      quizPriorityLastTs = 0;
+    }
+  };
+
+  quizPriorityRaf = requestAnimationFrame(loop);
+}
+
+function quizPriorityStop() {
+  if (quizPriorityRaf != null) {
+    cancelAnimationFrame(quizPriorityRaf);
+    quizPriorityRaf = null;
+  }
+  quizPriorityLastTs = 0;
+  quizPriorityRender();
+}
+
 function openModal() {
   quizClearDraft();
   // Компенсируем ширину скроллбара, чтобы страница не прыгала
@@ -995,6 +1103,7 @@ function openModal() {
   document.body.style.overflow = 'hidden';
 
   document.getElementById('quizModal').classList.add('open');
+  quizPriorityStart();
   // Сразу показываем квиз
   document.getElementById('quizFormScreen').classList.remove('hidden');
   document.getElementById('quizSuccess').classList.add('hidden');
@@ -1017,6 +1126,7 @@ function openModal() {
 
 function closeModal() {
   document.getElementById('quizModal').classList.remove('open');
+  quizPriorityStop();
   document.body.style.overflow = '';
   document.body.style.paddingRight = '';
   document.getElementById('siteHeader').style.paddingRight = '';
@@ -1039,6 +1149,7 @@ function openQuizContact(e, options) {
   document.body.style.overflow = 'hidden';
 
   document.getElementById('quizModal').classList.add('open');
+  quizPriorityStart();
   document.getElementById('quizFormScreen').classList.remove('hidden');
   document.getElementById('quizSuccess').classList.add('hidden');
   const qc2 = document.querySelector('.quiz-modal .quiz-container');
