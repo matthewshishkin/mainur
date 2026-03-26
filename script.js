@@ -1010,6 +1010,54 @@ let quizPriorityRemainingMs = 3 * 60 * 1000; // 03:00
 let quizPriorityLastTs = 0;
 let quizPriorityRaf = null;
 let quizPriorityExpired = false;
+const QUIZ_PRIORITY_STATE_KEY = 'mainur_quiz_priority_state_v1';
+
+function getNavType() {
+  try {
+    const nav = performance.getEntriesByType && performance.getEntriesByType('navigation');
+    const entry = nav && nav[0];
+    return (entry && entry.type) || 'navigate';
+  } catch (_) {
+    return 'navigate';
+  }
+}
+
+function quizPriorityPersist() {
+  try {
+    const modal = document.getElementById('quizModal');
+    if (!modal || !modal.classList.contains('open')) return;
+    const payload = {
+      remainingMs: Math.max(0, Math.round(quizPriorityRemainingMs)),
+      expired: !!quizPriorityExpired,
+      t: Date.now(),
+    };
+    localStorage.setItem(QUIZ_PRIORITY_STATE_KEY, JSON.stringify(payload));
+  } catch (_) {}
+}
+
+function quizPriorityRestoreIfNeeded() {
+  try {
+    // По ТЗ раньше таймер сбрасывался при reload. Сохраняем это поведение:
+    // при обычном обновлении страницы игнорируем сохранённое состояние.
+    if (getNavType() === 'reload') {
+      localStorage.removeItem(QUIZ_PRIORITY_STATE_KEY);
+      return false;
+    }
+
+    const raw = localStorage.getItem(QUIZ_PRIORITY_STATE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    const ms = Number(data && data.remainingMs);
+    if (!Number.isFinite(ms) || ms < 0 || ms > 3 * 60 * 1000) return false;
+    quizPriorityRemainingMs = ms;
+    quizPriorityExpired = !!(data && data.expired);
+    quizPriorityLastTs = 0;
+    quizPriorityRender();
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
 
 function formatMmSs(ms) {
   const totalSec = Math.max(0, Math.ceil(ms / 1000));
@@ -1084,6 +1132,8 @@ function quizPriorityStart() {
   if (!modal || !modal.classList.contains('open')) return;
   if (quizPriorityRaf != null) return; // already running
 
+  // Если вернулись со страницы политики — восстановить значение, если оно сохранено.
+  quizPriorityRestoreIfNeeded();
   quizPriorityLastTs = 0;
   quizPriorityRender();
 
@@ -1112,6 +1162,7 @@ function quizPriorityStop() {
     quizPriorityRaf = null;
   }
   quizPriorityLastTs = 0;
+  quizPriorityPersist();
   quizPriorityRender();
 }
 
@@ -1391,6 +1442,11 @@ async function onQuizWhatsAppCtaClick(e) {
 // Close on Escape
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+// Уход со страницы (например, переход в политику) — сохранить оставшееся время.
+window.addEventListener('pagehide', () => {
+  quizPriorityPersist();
+});
+
 // При переключении языка (RU/KZ) не сбрасываем прогресс квиза:
 // оставляем пользователя на том же шаге и с теми же данными.
 window.addEventListener('siteLangChange', () => {
@@ -1514,7 +1570,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     quizModalEl.addEventListener('change', () => quizSaveDraft());
     quizModalEl.addEventListener('click', (ev) => {
-      if (ev.target.closest('a.q-doc-link')) quizSaveDraft();
+      if (ev.target.closest('a.q-doc-link')) {
+        quizSaveDraft();
+        quizPriorityPersist(); // зафиксировать таймер перед уходом на политику
+      }
     });
   }
 

@@ -337,14 +337,14 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   justify-content: center;
   padding: 10px 14px;
   border-radius: 3px; /* как у кнопок */
-  background: rgba(255, 255, 255, 0.12); /* стеклянная заливка */
+  background: rgba(255, 255, 255, 0.09); /* стеклянная заливка (чуть прозрачнее) */
   border: 0.75px solid rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #fff;
   font-family: 'Inter', Arial, Helvetica, sans-serif; /* другой шрифт */
   font-size: 0.92rem;
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.2;
   box-shadow: none;
 }
@@ -368,7 +368,7 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   border-radius: 3px;
   padding: 16px 48px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   background: transparent;
   color: #fff;
@@ -2939,7 +2939,15 @@ a.q-submit-btn {
     padding-bottom: 64px;
   }
   .hero--video      { margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
-  .hero-content-wrap { padding-top: 56px; padding-bottom: 24px; display: flex; flex-direction: column; min-height: calc(100vh - var(--header-h)); }
+  .hero-content-wrap {
+    padding-top: 40px;
+    padding-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--header-h));
+    justify-content: flex-start;
+    align-items: center;
+  }
   .hero-video       { object-position: 52% center; } /* ещё вправо на 10% */
   .risk-cards       { grid-template-columns: 1fr; }
   .partners-grid    { grid-template-columns: 1fr 1fr; }
@@ -3019,9 +3027,23 @@ a.q-submit-btn {
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+    margin-top: -10px;
+    margin-bottom: 18px;
   }
   .hero-pill {
     border: none;
+    /* -30% пропорционально */
+    padding: 7px 10px;
+    font-size: 0.64rem;
+    font-weight: 300;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Кнопка в самый низ блока */
+  .hero-btn {
+    bottom: 14px;
   }
 
   .cta-content h2 {
