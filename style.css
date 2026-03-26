@@ -384,8 +384,10 @@ h3 { font-weight: normal; font-size: 1.05rem; }
 @supports (-webkit-background-clip: text) {
   /* Shimmer (sheen): базовый цвет текста постоянный, поверх — движущийся блик */
   @keyframes heroBtnSheen {
-    0%   { background-position: 0 0, -220% 50%; }
-    100% { background-position: 0 0, 220% 50%; }
+    /* движение справа налево + пауза в конце (0.6s) */
+    0%      { background-position: 0 0, 220% 50%; }
+    82.4%   { background-position: 0 0, -220% 50%; }
+    100%    { background-position: 0 0, -220% 50%; }
   }
 
   .hero-btn-text {
@@ -394,11 +396,11 @@ h3 { font-weight: normal; font-size: 1.05rem; }
       linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0) 42%,
-        rgba(255, 255, 255, 0.22) 46%,
+        rgba(255, 255, 255, 0) 35%,
+        rgba(255, 255, 255, 0.22) 42%,
         rgba(255, 255, 255, 1) 50%,
-        rgba(255, 255, 255, 0.22) 54%,
-        rgba(255, 255, 255, 0) 58%,
+        rgba(255, 255, 255, 0.22) 58%,
+        rgba(255, 255, 255, 0) 65%,
         rgba(255, 255, 255, 0) 100%
       );
     background-size: 100% 100%, 240% 100%;
@@ -406,7 +408,7 @@ h3 { font-weight: normal; font-size: 1.05rem; }
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: heroBtnSheen 2.8s linear infinite;
+    animation: heroBtnSheen 3.4s linear infinite;
   }
 }
 /* Первый блок: при наведении — бордо, белый текст */
