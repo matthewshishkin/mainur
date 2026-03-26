@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const items = Array.from(document.querySelectorAll('.stats-showcase-item'));
   if (!section || !items.length) return;
 
-  const DEFAULT_DURATION_MS = 550; /* в 2 раза быстрее; для отдельных — data-duration (делим на 2) */
+  const DEFAULT_DURATION_MS = 1000; /* медленнее для остальных чисел; отдельные data-duration сохраняются */
 
   const animateCounter = (el) => new Promise((resolve) => {
     if (!el || el.dataset.countDone === '1') {
