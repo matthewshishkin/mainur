@@ -1369,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* =============================================
      SCROLL ANIMATIONS — Law cards
      ============================================= */
-  const cardsToAnimate = document.querySelectorAll('.law-card, .risk-card');
+  const lawCards = document.querySelectorAll('.law-card');
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1381,7 +1381,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
 
-  cardsToAnimate.forEach(card => observer.observe(card));
+  lawCards.forEach(card => observer.observe(card));
+
+  /* =============================================
+     SCROLL ANIMATIONS — Risk cards (same behavior, separate observer)
+     ============================================= */
+  const riskCards = document.querySelectorAll('.risk-card');
+  if (riskCards.length) {
+    const riskObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.dataset.delay || 0);
+          setTimeout(() => entry.target.classList.add('animate-in'), delay);
+          riskObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+
+    riskCards.forEach(card => riskObserver.observe(card));
+  }
 
   /* =============================================
      Telegram spoiler (canvas particles)
