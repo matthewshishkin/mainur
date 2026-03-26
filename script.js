@@ -1116,7 +1116,6 @@ function quizPriorityStop() {
 }
 
 function openModal() {
-  quizClearDraft();
   // Компенсируем ширину скроллбара, чтобы страница не прыгала
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   document.body.style.paddingRight = scrollbarWidth + 'px';
@@ -1130,18 +1129,27 @@ function openModal() {
   document.getElementById('quizSuccess').classList.add('hidden');
   const qc = document.querySelector('.quiz-modal .quiz-container');
   if (qc) qc.scrollTop = 0;
-  // Сбрасываем квиз
-  currentStep = 1;
+
+  // Если есть черновик (например, пользователь закрыл квиз / переключил язык),
+  // продолжаем с текущего шага. Иначе — начинаем с начала.
   lastProgressPercent = 0;
-  showStep(1);
-  Object.keys(answers).forEach((k) => delete answers[k]);
-  document.querySelectorAll('.q-opt.selected').forEach(b => b.classList.remove('selected'));
-  const q1Other = document.getElementById('q1OtherWrap');
-  const q1Inp = document.getElementById('q1OtherInput');
-  if (q1Other) q1Other.classList.add('q-other-field--hidden');
-  if (q1Inp) {
-    q1Inp.value = '';
-    q1Inp.classList.remove('q-other-input--invalid');
+  const restored = quizApplyDraft();
+  const draftStep = restored ? quizGetDraftStep() : null;
+  if (restored && draftStep) {
+    currentStep = draftStep;
+    showStep(draftStep);
+  } else {
+    currentStep = 1;
+    showStep(1);
+    Object.keys(answers).forEach((k) => delete answers[k]);
+    document.querySelectorAll('.q-opt.selected').forEach(b => b.classList.remove('selected'));
+    const q1Other = document.getElementById('q1OtherWrap');
+    const q1Inp = document.getElementById('q1OtherInput');
+    if (q1Other) q1Other.classList.add('q-other-field--hidden');
+    if (q1Inp) {
+      q1Inp.value = '';
+      q1Inp.classList.remove('q-other-input--invalid');
+    }
   }
 }
 
