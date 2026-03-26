@@ -3051,8 +3051,14 @@ a.q-submit-btn {
   }
 
   /* Кнопка в самый низ блока */
-  .hero-btn {
+  .hero--video .hero-btn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 6px;
+    margin-top: 0;
+    width: auto;
+    display: inline-block;
   }
 
   .cta-content h2 {
