@@ -892,6 +892,19 @@ function quizApplyDraft() {
   }
 }
 
+function quizGetDraftStep() {
+  try {
+    const raw = localStorage.getItem(QUIZ_DRAFT_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    const st = Number(data && data.currentStep);
+    if (!Number.isFinite(st) || st < 1 || st > TOTAL_STEPS + 1) return null;
+    return st;
+  } catch (_) {
+    return null;
+  }
+}
+
 function resetQuizToEmptyContactStep() {
   Object.keys(answers).forEach((k) => delete answers[k]);
   document.querySelectorAll('.q-opt.selected').forEach((b) => b.classList.remove('selected'));
@@ -1369,6 +1382,28 @@ async function onQuizWhatsAppCtaClick(e) {
 
 // Close on Escape
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// При переключении языка (RU/KZ) не сбрасываем прогресс квиза:
+// оставляем пользователя на том же шаге и с теми же данными.
+window.addEventListener('siteLangChange', () => {
+  const modal = document.getElementById('quizModal');
+  if (!modal || !modal.classList.contains('open')) return;
+
+  // Сохраняем текущее состояние, т.к. apply(lang) меняет тексты в DOM.
+  quizSaveDraft();
+
+  const draftStep = quizGetDraftStep();
+  const stepToShow = draftStep || currentStep || 1;
+
+  // Восстанавливаем selected + инпуты формы (если есть черновик),
+  // затем показываем текущий шаг.
+  quizApplyDraft();
+  currentStep = stepToShow;
+  showStep(stepToShow);
+
+  // Перерисовать подпись таймера в новом языке (и expired-текст).
+  quizPriorityRender();
+});
 
 // ── Option buttons logic ──
 document.addEventListener('DOMContentLoaded', () => {
