@@ -1006,17 +1006,25 @@ function formatMmSs(ms) {
 }
 
 function quizPriorityRender() {
-  const label = (window.SiteI18n && window.SiteI18n.STRINGS)
+  const labelHtml = (window.SiteI18n && window.SiteI18n.STRINGS)
     ? ((() => {
         const lang = window.SiteI18n.getLang ? window.SiteI18n.getLang() : 'ru';
         const dict = (window.SiteI18n.STRINGS && window.SiteI18n.STRINGS[lang]) || window.SiteI18n.STRINGS.ru || {};
-        return quizPriorityExpired ? (dict.q_timer_expired || 'Приоритетная обработка заявки недоступна') : (dict.q_timer_label || 'Сгорает: приоритетная обработка заявки');
+        return quizPriorityExpired
+          ? (dict.q_timer_expired || 'Приоритет вашей заявке недоступен.<br>Ваша заявка будет обработа в порядке очереди')
+          : (dict.q_timer_label || 'Сгорает: приоритет вашей заявке');
       })())
-    : (quizPriorityExpired ? 'Приоритетная обработка заявки недоступна' : 'Сгорает: приоритетная обработка заявки');
+    : (quizPriorityExpired
+        ? 'Приоритет вашей заявке недоступен.<br>Ваша заявка будет обработа в порядке очереди'
+        : 'Сгорает: приоритет вашей заявке');
   const time = quizPriorityExpired ? '00:00' : formatMmSs(quizPriorityRemainingMs);
 
+  document.querySelectorAll('.q-timer').forEach((wrap) => {
+    wrap.classList.toggle('is-expired', quizPriorityExpired);
+  });
+
   document.querySelectorAll('.js-q-timer-label').forEach((el) => {
-    el.textContent = label;
+    el.innerHTML = labelHtml;
   });
   document.querySelectorAll('.js-q-timer-time').forEach((el) => {
     el.textContent = time;
