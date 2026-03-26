@@ -2337,9 +2337,9 @@ blockquote {
   margin-top: 10px;
   color: #000;
 }
-.q-timer.is-expired .q-timer-label {
-  font-size: 1.079rem; /* +30% */
-  line-height: 1.35;
+.q-timer-label .q-timer-accent {
+  color: var(--blue);
+  font-weight: 600;
 }
 .q-timer-time {
   font-family: 'PlayfairDisplay', Arial, Helvetica, sans-serif;
@@ -2402,12 +2402,12 @@ blockquote {
   flex: 1;
   padding: 11px 18px;
   background: transparent;
-  border: 1px solid #043b23;
+  border: 1px solid var(--blue);
   border-radius: 3px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.86rem;
   font-weight: 500;
-  color: #043b23;
+  color: var(--blue);
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease,
     box-shadow 0.2s ease;
@@ -2416,8 +2416,8 @@ blockquote {
 }
 .q-btn-next:hover {
   background: transparent;
-  border-color: #043b23;
-  color: #043b23;
+  border-color: var(--blue);
+  color: var(--blue);
   animation: none;
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.14),
@@ -2425,8 +2425,8 @@ blockquote {
 }
 .q-btn-next:active {
   background: transparent;
-  border-color: #032a19;
-  color: #032a19;
+  border-color: var(--blue);
+  color: var(--blue);
   animation: none;
   box-shadow:
     0 8px 18px rgba(0, 0, 0, 0.12),
