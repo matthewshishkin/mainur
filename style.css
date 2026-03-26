@@ -368,7 +368,7 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   border-radius: 3px;
   padding: 16px 48px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   background: transparent;
   color: #fff;
@@ -2515,6 +2515,7 @@ blockquote {
     0 10px 24px rgba(0, 0, 0, 0.14),
     0 2px 8px rgba(0, 0, 0, 0.10);
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  animation: q-btn-next-pulse 1s linear infinite;
 }
 a.q-submit-btn {
   text-decoration: none;
@@ -2525,17 +2526,25 @@ a.q-submit-btn {
 .q-submit-btn:hover {
   background: #6a1324;
   border-color: #6a1324;
+  animation: none;
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.16),
-    0 3px 10px rgba(0, 0, 0, 0.12);
+    0 0 16px rgba(123, 26, 43, 0.22);
 }
 
 .q-submit-btn:active {
   background: #5a0f1e;
   border-color: #5a0f1e;
+  animation: none;
   box-shadow:
     0 8px 18px rgba(0, 0, 0, 0.14),
-    0 2px 8px rgba(0, 0, 0, 0.10);
+    0 0 10px rgba(123, 26, 43, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .q-submit-btn {
+    animation: none;
+  }
 }
 
 /* Gift screen */
@@ -3043,7 +3052,7 @@ a.q-submit-btn {
 
   /* Кнопка в самый низ блока */
   .hero-btn {
-    bottom: 14px;
+    bottom: 6px;
   }
 
   .cta-content h2 {
