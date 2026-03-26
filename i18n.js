@@ -13,9 +13,9 @@
       lang_toggle_to_ru: 'Орыс тіліне ауыстыру',
 
       hero_title_main:
-        'Защитите свою клинику<br>от рисков штравов<br>от 10,000,000 тенге',
-      hero_sub1: '<span class="hero-pill-emph">С учётом</span> законодательства 2026 года',
-      hero_sub2: 'Даже если у вас <span class="hero-pill-emph">уже есть юрист</span>',
+        'Защитим руководство клиники<br>от уголовных исков пациентов и сотрудников, и штрафов<br>свыше 10,000,000 тенге',
+      hero_sub1: '<span class="hero-pill-emph">С учётом</span>&nbsp;законодательства 2026 года',
+      hero_sub2: 'Даже если у вас&nbsp;<span class="hero-pill-emph">уже есть юрист</span>',
       hero_btn: '<span class="hero-btn-text">Выявить риски</span>',
 
       law_h2: 'Как часто меняется законодательство<br>в&nbsp;сфере медицины?',
@@ -79,6 +79,8 @@
       stat_l4: 'клиник в портфолио',
       stat_l5: 'сэкономлено клиентам на штрафах',
       stat_suf_mln: ' млн ₸',
+      stat_pref_since: 'с ',
+      stat_suf_since: ' года',
       stat_v6: 'с 1995 года',
       stat_l6: 'Начало деятельности',
 
@@ -112,7 +114,7 @@
       tar_in_btn: 'от&nbsp;240&nbsp;000₸',
 
       cta_h2:
-        '<span class="cta-title-text">Защитите свою клинику<br>от рисков штравов<br>от 10,000,000 тенге</span>',
+        '<span class="cta-title-text">Защитим руководство клиники<br>от уголовных исков пациентов и сотрудников, и штрафов<br>свыше 10,000,000 тенге</span>',
       cta_sub:
         'За 30 минут на консультации вы получите разбор текущих рисков вашей клиники, которые могут подкрасться уже завтра, жмите на кнопку:',
       cta_btn: 'Выявить риски',
@@ -187,8 +189,8 @@
 
       hero_title_main:
         'Клиника тәуекелдерін талдауға жазылыңыз<br>&nbsp;<span class="cta-amount">10&nbsp;000&nbsp;000&#8376;</span>-дан бастап айыппұлдан сақтаныңыз',
-      hero_sub1: '<span class="hero-pill-emph">2026 жылғы</span> заңнама талаптарын ескере отырып',
-      hero_sub2: 'Тіпті сізде <span class="hero-pill-emph">заңгер болса да</span>',
+      hero_sub1: '<span class="hero-pill-emph">2026 жылғы</span>&nbsp;заңнама талаптарын ескере отырып',
+      hero_sub2: 'Тіпті сізде&nbsp;<span class="hero-pill-emph">заңгер болса да</span>',
       hero_btn: '<span class="hero-btn-text">Тәуекелді анықтау</span>',
 
       law_h2: 'Медицина саласындағы заңнама<br>қашан өзгереді?',
@@ -252,6 +254,8 @@
       stat_l4: 'портфолиодағы клиникалар',
       stat_l5: 'клиенттерге айыппұлдан үнемдеді',
       stat_suf_mln: ' млн ₸',
+      stat_pref_since: '',
+      stat_suf_since: ' жылдан бері',
       stat_v6: '1995 жылдан бері',
       stat_l6: 'Қызметтің басталуы',
 
@@ -397,15 +401,17 @@
     if (dict.page_title) document.title = dict.page_title;
 
     document.querySelectorAll('.stats-showcase-num[data-counter]').forEach((el) => {
+      const pk = el.getAttribute('data-i18n-prefix');
       const sk = el.getAttribute('data-i18n-suffix');
-      if (!sk || dict[sk] === undefined) return;
-      const suf = dict[sk];
+      const pref = pk && dict[pk] !== undefined ? dict[pk] : (el.dataset.prefix || '');
+      const suf = sk && dict[sk] !== undefined ? dict[sk] : (el.dataset.suffix || '');
+      el.dataset.prefix = pref;
       el.dataset.suffix = suf;
       const target = Number(el.dataset.target || 0);
       if (el.dataset.countDone === '1') {
-        el.textContent = `${target}${suf}`;
+        el.textContent = `${pref}${target}${suf}`;
       } else {
-        el.textContent = `0${suf}`;
+        el.textContent = `${pref}0${suf}`;
       }
     });
 

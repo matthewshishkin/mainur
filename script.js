@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el.dataset.countDone = '1';
 
     const target = Number(el.dataset.target || 0);
+    const prefix = el.dataset.prefix || '';
     const suffix = el.dataset.suffix || '';
     const customMs = Number(el.dataset.duration);
     const duration =
@@ -326,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Ускорение по мере роста числа
       const eased = 1 - Math.pow(1 - t, 2.35);
       const val = Math.round(target * eased);
-      el.textContent = `${val}${suffix}`;
+      el.textContent = `${prefix}${val}${suffix}`;
       if (t < 1) {
         requestAnimationFrame(tick);
       } else {
