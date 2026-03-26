@@ -3012,6 +3012,18 @@ a.q-submit-btn {
   .hero-title { font-size: clamp(1.7rem, 7.14vw, 3.4rem); text-align: left; }
   .hero-title br { display: none; }
 
+  /* Hero subtitle pills: align left, stay within title width; no border on mobile */
+  .hero-subtitle {
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .hero-pill {
+    border: none;
+  }
+
   .cta-content h2 {
     font-size: clamp(1.7rem, 7.14vw, 3.4rem);
     margin-bottom: 14px;
