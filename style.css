@@ -2173,16 +2173,7 @@ blockquote {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* Тонкие разделители на границах сегментов */
-  background: repeating-linear-gradient(
-    to right,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,0) 19%,
-    rgba(0,0,0,0.22) 19%,
-    rgba(0,0,0,0.22) 20%,
-    rgba(0,0,0,0) 20%,
-    rgba(0,0,0,0) 100%
-  );
+  display: none; /* без вертикальных разделителей */
 }
 .stepper-step {
   display: flex;
