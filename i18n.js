@@ -13,7 +13,7 @@
       lang_toggle_to_ru: 'Орыс тіліне ауыстыру',
 
       hero_title_main:
-        'Исключим риск <span class="hero-title-keyword">штрафов</span><br>свыше 10,000,000 тенге<br>и <span class="hero-title-keyword">уголовных исков</span><br>от врачей и пациентов',
+        'Исключим риск<br><span class="hero-title-keyword">штрафов</span> свыше 10,000,000 тенге<br>и <span class="hero-title-keyword">уголовных исков</span><br>от врачей и пациентов',
       hero_sub1: '<span class="hero-pill-emph">С учётом</span>&nbsp;законодательства 2026 года',
       hero_sub2: 'Даже если у вас&nbsp;<span class="hero-pill-emph">уже есть юрист</span>',
       hero_btn: '<span class="hero-btn-text">Выявить риски</span>',
@@ -114,7 +114,7 @@
       tar_in_btn: 'от&nbsp;240&nbsp;000₸',
 
       cta_h2:
-        '<span class="cta-title-text">Исключим риск <span class="cta-title-keyword">штрафов</span><br>свыше 10,000,000 тенге<br>и <span class="cta-title-keyword">уголовных исков</span><br>от врачей и пациентов</span>',
+        '<span class="cta-title-text">Исключим риск<br><span class="cta-title-keyword">штрафов</span> свыше 10,000,000 тенге<br>и <span class="cta-title-keyword">уголовных исков</span><br>от врачей и пациентов</span>',
       cta_sub:
         'За 30 минут на консультации вы получите разбор текущих рисков вашей клиники, которые могут подкрасться уже завтра, жмите на кнопку:',
       cta_btn: 'Выявить риски',
