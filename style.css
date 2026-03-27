@@ -326,6 +326,10 @@ h3 { font-weight: normal; font-size: 1.05rem; }
   color: #c1272d;
 }
 
+.title-mobile-only {
+  display: none;
+}
+
 .hero-subtitle {
   display: flex;
   flex-wrap: wrap;
@@ -1881,6 +1885,22 @@ blockquote {
 
 /* CTA на десктопе: как блок 1 (hero) — по центру, на высоту экрана, белый фон; кнопка — без изменений (правила .cta-section .hero-btn выше) */
 @media (min-width: 961px) {
+  .title-desktop-only {
+    display: inline;
+  }
+
+  .title-mobile-only {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: clamp(2.04rem, 4.182vw, 5.304rem);
+  }
+
+  .cta-content h2 {
+    font-size: clamp(2.04rem, 4.182vw, 5.304rem);
+  }
+
   .cta-section {
     padding: 0;
     background: #fff;
@@ -1913,7 +1933,7 @@ blockquote {
   .cta-content h2 {
     margin-bottom: 36px;
     color: #000;
-    font-size: clamp(1.02rem, 2.091vw, 2.652rem);
+    font-size: clamp(2.04rem, 4.182vw, 5.304rem);
     font-weight: 500;
     width: 100%;
   }
@@ -3007,6 +3027,14 @@ a.q-submit-btn {
 }
 
 @media (max-width: 700px) {
+  .title-desktop-only {
+    display: none;
+  }
+
+  .title-mobile-only {
+    display: inline;
+  }
+
   .section          { padding: 60px 0; }
   .pricing-section  { padding-bottom: 84px; } /* 60 + 24: зазор перед CTA на мобиле */
   /* CTA: компактнее по высоте (футер убран) */
