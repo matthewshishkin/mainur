@@ -1885,6 +1885,11 @@ blockquote {
 
 /* CTA на десктопе: как блок 1 (hero) — по центру, на высоту экрана, белый фон; кнопка — без изменений (правила .cta-section .hero-btn выше) */
 @media (min-width: 961px) {
+  .hero-pill {
+    padding: 8px 11px;
+    font-size: 0.74rem;
+  }
+
   .title-desktop-only {
     display: inline;
   }
