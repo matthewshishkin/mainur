@@ -1893,14 +1893,6 @@ blockquote {
     display: none;
   }
 
-  .hero-title {
-    font-size: clamp(2.04rem, 4.182vw, 5.304rem);
-  }
-
-  .cta-content h2 {
-    font-size: clamp(2.04rem, 4.182vw, 5.304rem);
-  }
-
   .cta-section {
     padding: 0;
     background: #fff;
@@ -1933,7 +1925,7 @@ blockquote {
   .cta-content h2 {
     margin-bottom: 36px;
     color: #000;
-    font-size: clamp(2.04rem, 4.182vw, 5.304rem);
+    font-size: clamp(1.02rem, 2.091vw, 2.652rem);
     font-weight: 500;
     width: 100%;
   }
@@ -3035,6 +3027,10 @@ a.q-submit-btn {
     display: inline;
   }
 
+  .title-mobile-only br {
+    display: block !important;
+  }
+
   .section          { padding: 60px 0; }
   .pricing-section  { padding-bottom: 84px; } /* 60 + 24: зазор перед CTA на мобиле */
   /* CTA: компактнее по высоте (футер убран) */
@@ -3125,7 +3121,7 @@ a.q-submit-btn {
   h2 { font-size: clamp(2.8rem, 7vw, 4rem); }
   h3 { font-size: 1.5rem; }
   .hero-title { font-size: clamp(1.7rem, 7.14vw, 3.4rem); text-align: left; }
-  .hero-title br { display: none; }
+  .hero-title .title-desktop-only br { display: none; }
 
   /* Hero subtitle pills: align left, stay within title width; no border on mobile */
   .hero-subtitle {
