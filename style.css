@@ -1746,7 +1746,7 @@ blockquote {
    BLOCK 9 — CTA
    ============================================= */
 .cta-section {
-  background: #000;
+  background: #fff;
   padding-top: 168px; /* белое поле над заголовком */
 }
 
@@ -1761,13 +1761,13 @@ blockquote {
   margin-bottom: 18px;
   font-size: clamp(1.02rem, 2.091vw, 2.652rem); /* как в 1-м блоке */
   font-weight: 500;
-  color: #fff;
+  color: #000;
 }
 
 /* CTA title: shimmer as in hero (text only) */
 .cta-title-text {
   display: inline-block;
-  color: #fff;
+  color: #000;
   background: none;
   -webkit-text-fill-color: currentColor;
   animation: none;
@@ -1782,7 +1782,7 @@ blockquote {
 }
 
 .cta-title-keyword {
-  color: #fff;
+  color: #000;
 }
 
 /* CTA & hero: keywords inherit current title color (white) */
@@ -1790,7 +1790,7 @@ blockquote {
   color: #c1272d;
   font-weight: 600;
 }
-.cta-sub        { color: rgba(255, 255, 255, 0.70); margin-bottom: 104px; font-size: 0.97rem; }
+.cta-sub        { color: var(--muted); margin-bottom: 104px; font-size: 0.97rem; }
 
 /*
   CTA: бордовая кнопка и тень в тон бренду
@@ -1909,7 +1909,7 @@ blockquote {
 
   .cta-section {
     padding: 0;
-    background: #000;
+    background: #fff;
   }
 
   .cta-inner {
@@ -1938,7 +1938,7 @@ blockquote {
 
   .cta-content h2 {
     margin-bottom: 36px;
-    color: #fff;
+    color: #000;
     font-size: clamp(1.02rem, 2.091vw, 2.652rem);
     font-weight: 500;
     width: 100%;
