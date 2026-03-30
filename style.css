@@ -1764,6 +1764,19 @@ blockquote {
   color: #000;
 }
 
+/* CTA reveal animation (like block 2 cards): title then subtitle */
+.cta-anim {
+  --cta-shift-y: 0px;
+  opacity: 0;
+  transform: translate3d(0, calc(var(--cta-shift-y) + 32px), 0);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  will-change: opacity, transform;
+}
+.cta-anim.animate-in {
+  opacity: 1;
+  transform: translate3d(0, var(--cta-shift-y), 0);
+}
+
 /* CTA title: shimmer as in hero (text only) */
 .cta-title-text {
   display: inline-block;
@@ -2985,6 +2998,14 @@ a.q-submit-btn {
   .cta-inner               { grid-template-columns: 1fr; }
   .cta-photo-col           { display: none; }
 
+  /* Like law cards on mobile: slide from left */
+  .cta-anim {
+    transform: translate3d(-50px, var(--cta-shift-y), 0);
+  }
+  .cta-anim.animate-in {
+    transform: translate3d(0, var(--cta-shift-y), 0);
+  }
+
   /* Pricing */
   .tariff-grid             { grid-template-columns: 1fr; }
   .tariff-scale            { height: 380px; }
@@ -3172,11 +3193,11 @@ a.q-submit-btn {
   .cta-content h2 {
     font-size: clamp(1.7rem, 7.14vw, 3.4rem);
     margin-bottom: 14px;
-    transform: translateY(-112px);
+    --cta-shift-y: -112px;
   }
   .cta-section .cta-sub {
     margin-bottom: 48px;
-    transform: translateY(-112px);
+    --cta-shift-y: -112px;
   }
   .cta-section .hero-btn {
     margin-top: 40px;

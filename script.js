@@ -1644,6 +1644,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =============================================
+     SCROLL ANIMATIONS — CTA title/subtitle (like Law cards, sequential)
+     ============================================= */
+  const ctaTitle = document.querySelector('.cta-section .cta-content h2');
+  const ctaSub = document.querySelector('.cta-section .cta-content .cta-sub');
+  if (ctaTitle && ctaSub) {
+    ctaTitle.classList.add('cta-anim');
+    ctaSub.classList.add('cta-anim');
+
+    const ctaObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        // Title first, then subtitle
+        setTimeout(() => ctaTitle.classList.add('animate-in'), 0);
+        setTimeout(() => ctaSub.classList.add('animate-in'), 150);
+        ctaObserver.disconnect();
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+
+    ctaObserver.observe(ctaTitle);
+  }
+
+  /* =============================================
      Telegram spoiler (canvas particles)
      ============================================= */
 
