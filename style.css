@@ -1,9 +1,3 @@
-.cta-in-view .pricing-section {
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* =============================================
    FONTS
    ============================================= */
