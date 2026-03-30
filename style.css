@@ -323,7 +323,7 @@ h3 { font-weight: normal; font-size: 1.05rem; }
 .hero-title { margin-bottom: 36px; color: #fff; font-size: clamp(1.02rem, 2.091vw, 2.652rem); font-weight: 500; width: 100%; }
 
 .hero-title-keyword {
-  color: #c1272d;
+  color: #fff;
 }
 
 .title-mobile-only {
@@ -1775,7 +1775,7 @@ blockquote {
 }
 
 .cta-title-keyword {
-  color: #c1272d;
+  color: #fff;
 }
 .cta-content h2 .cta-amount {
   color: #c1272d;
