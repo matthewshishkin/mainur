@@ -3172,9 +3172,11 @@ a.q-submit-btn {
   .cta-content h2 {
     font-size: clamp(1.7rem, 7.14vw, 3.4rem);
     margin-bottom: 14px;
+    transform: translateY(-112px);
   }
   .cta-section .cta-sub {
     margin-bottom: 48px;
+    transform: translateY(-112px);
   }
   .cta-section .hero-btn {
     margin-top: 40px;
