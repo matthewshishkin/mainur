@@ -1473,6 +1473,25 @@ window.addEventListener('siteLangChange', () => {
 
 // ── Option buttons logic ──
 document.addEventListener('DOMContentLoaded', () => {
+  // When CTA (last block) is in view, hide the previous section so it doesn't peek under the fixed header.
+  try {
+    const cta = document.querySelector('.cta-section');
+    if (cta && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver(
+        (entries) => {
+          const inView = entries.some((e) => e.isIntersecting);
+          document.body.classList.toggle('cta-in-view', inView);
+        },
+        {
+          root: null,
+          threshold: 0.15,
+          rootMargin: `-${Math.max(0, (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 50))}px 0px -35% 0px`,
+        }
+      );
+      obs.observe(cta);
+    }
+  } catch (_) {}
+
   const waQuizBtn = document.querySelector('.quiz-whatsapp-btn');
   if (waQuizBtn) waQuizBtn.href = WHATSAPP_QUIZ_URL;
 
