@@ -1917,9 +1917,9 @@ blockquote {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 0; /* без растягивания на весь экран */
-    padding-top: 36px;
-    padding-bottom: 44px;
+    min-height: calc(100vh - var(--header-h));
+    padding-top: 80px;
+    padding-bottom: 100px;
     box-sizing: border-box;
   }
 
