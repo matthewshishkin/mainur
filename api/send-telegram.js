@@ -3,7 +3,7 @@
  * Должен открываться: GET https://mainur.vercel.app/api/send-telegram
  */
 const TELEGRAM_BOT_TOKEN = '8633244693:AAFYxNx52ZqGvUq2irDoWa4_-9JWiqSW1X4';
-const TELEGRAM_CHAT_ID = '5110401504';
+const TELEGRAM_CHAT_ID = '-5265836501';
 
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
